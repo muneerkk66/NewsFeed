@@ -8,8 +8,9 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+class NewsViewController: UIViewController {
+@IBOutlet var newsTableView: UITableView!
+@IBOutlet var searchController: UISearchBar!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
