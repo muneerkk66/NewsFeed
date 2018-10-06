@@ -17,7 +17,18 @@ class NewsTableViewCell: UITableViewCell {
     @IBOutlet weak var newsImageView: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
+        //set the values for top,left,bottom,right margins
+
         // Initialization code
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        //set the values for top,left,bottom,right margins
+        let margins = UIEdgeInsetsMake(0, 0, 10, 0)
+        contentView.frame = UIEdgeInsetsInsetRect(contentView.frame, margins)
+      
+       
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

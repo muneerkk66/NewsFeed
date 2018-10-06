@@ -7,3 +7,10 @@
 //
 
 import Foundation
+class NewsDataHandler: NSObject {
+    func calculateIndexPathsToReload(from newNewsList: [News]) -> [IndexPath] {
+        let startIndex = newNewsList.count - newNewsList.count
+        let endIndex = startIndex + newNewsList.count
+        return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0)}
+    }
+}

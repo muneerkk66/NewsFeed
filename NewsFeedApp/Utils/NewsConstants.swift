@@ -30,7 +30,14 @@ class NewsConstants: NSObject {
         case sort       = "sortBy"
         case key        = "apiKey"
     }
-    
+    // MARK: TableViewCellIdentifier -
+    enum TableViewCellIdentifier:String {
+        case NewsCell                        = "newsCellID"
+    }
+    // MARK: Nib Name -
+    enum NibNames:String {
+        case NewsNib                        = "NewsTableViewCell"
+    }
     
     enum DataResponseError: Error {
         case network

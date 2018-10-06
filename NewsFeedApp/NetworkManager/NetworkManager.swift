@@ -9,11 +9,11 @@
 import Foundation
 class NetworkManager: NSObject {
     let session: URLSession
-    internal typealias ApiCompletionBlock = (_ responseObject : Any?, _ error: NewsConstants.DataResponseError?) -> ()
+    internal typealias ApiCompletionBlock = (_ responseObject : NewsResponse?, _ error: NewsConstants.DataResponseError?) -> ()
     init(session: URLSession = URLSession.shared) {
         self.session = session
     }
-    func getRequestPath<T:Codable>(request:URLRequest, parameters:[String:AnyObject]?,decodableType:T, completionBlock:@escaping ApiCompletionBlock) {
+    func getRequestPath(request:URLRequest, parameters:[String:AnyObject]?, completionBlock:@escaping ApiCompletionBlock) {
         
         session.dataTask(with: request, completionHandler: { data, response, error in
             guard
@@ -24,7 +24,7 @@ class NetworkManager: NSObject {
                     completionBlock(nil,NewsConstants.DataResponseError.network)
                     return
             }
-            guard let decodedResponse = try? JSONDecoder().decode(type(of:decodableType), from: data) else {
+            guard let decodedResponse = try? JSONDecoder().decode(NewsResponse.self, from: data) else {
             completionBlock(nil,NewsConstants.DataResponseError.decoding)
                 return
             }

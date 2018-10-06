@@ -9,9 +9,13 @@
 import Foundation
 
 public struct News : Codable {
-    let name:String
-    public init?(from: Decodable) {
-        //decoding here
-        return nil
-    }
+    let title:String
+    let urlToImage:String
+    let author:String
+    let description:String
+    let publishedAt:String
+}
+public struct NewsResponse: Decodable {
+    let articles: [News]
+    let totalResults: Int
 }
