@@ -8,5 +8,5 @@ target 'NewsFeedApp' do
 
   # Pods for WhereIsMyTrain
   pod 'SDWebImage', '~> 4.0'
-
+  pod 'MBProgressHUD', '~> 1.1.0'
 end

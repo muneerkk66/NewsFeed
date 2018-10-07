@@ -30,7 +30,15 @@ class NewsTableViewCell: UITableViewCell {
        
         
     }
-
+    func configureNewsCell(with newsObject: News?) {
+        if let newsObject = newsObject {
+            self.titleLabel.text = newsObject.title
+            self.authorLabel.text = "Author: \(newsObject.author)"
+            self.descriptionLabel.text = newsObject.description
+            self.timeLabel.text = newsObject.publishedAt.getDateFromString().getElapsedInterval()
+            self.newsImageView?.sd_setImage(with: URL(string:newsObject.urlToImage), placeholderImage:#imageLiteral(resourceName: "placeholder"))
+        } 
+    }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

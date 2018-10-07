@@ -13,11 +13,14 @@ protocol TableViewPaginationDelegate: class {
 }
 
 class NewsVM: NSObject {
+    enum sortOrder:Int {
+        case ascedning = 0
+        case descedning = 1
+    }
     internal typealias VMDataCompletionBlock = (_ responseObject : NewsResponse?, _ errorObject : NewsConstants.DataResponseError?) -> ()
     var newsList :[News] = []
     var apiHandler = NewsAPIHandler()
     var dataHandler = NewsDataHandler()
-    var currentPage = 1
     var totalNews = 0
     func loadAllNewsFeed(search:String?,pageNumber: Int,size:Int,sortKey: String, onCompletion:@escaping VMDataCompletionBlock) {
         
@@ -25,8 +28,14 @@ class NewsVM: NSObject {
             onCompletion(response,error)
         }
     }
-    var currentCount: Int {
-        return newsList.count
+    var totalNewsCount: Int {
+        return totalNews
     }
     
+    var currentNewsCount: Int {
+        return newsList.count
+    }
+    func fetchAllNewsBySortDate(newsList:[News],order:ComparisonResult)->[News]{
+        return dataHandler.sortNewsByDate(newsArray: newsList,orderedBy:order)
+    }
 }
