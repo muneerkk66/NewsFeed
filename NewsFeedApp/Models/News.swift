@@ -14,6 +14,7 @@ public struct News : Codable {
     let author:String
     let description:String
     let publishedAt:String
+    let url:String
 }
 public struct NewsResponse: Decodable {
     let articles: [News]

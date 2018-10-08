@@ -15,6 +15,7 @@ class NewsTableViewCell: UITableViewCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var newsImageView: UIImageView!
+    @IBOutlet var linkView: UITextView!
     override func awakeFromNib() {
         super.awakeFromNib()
         //set the values for top,left,bottom,right margins
@@ -32,13 +33,19 @@ class NewsTableViewCell: UITableViewCell {
     }
     func configureNewsCell(with newsObject: News?) {
         if let newsObject = newsObject {
-            self.titleLabel.text = newsObject.title
-            self.authorLabel.text = "Author: \(newsObject.author)"
-            self.descriptionLabel.text = newsObject.description
-            self.timeLabel.text = newsObject.publishedAt.getDateFromString().getElapsedInterval()
-            self.newsImageView?.sd_setImage(with: URL(string:newsObject.urlToImage), placeholderImage:#imageLiteral(resourceName: "placeholder"))
+            titleLabel.text = newsObject.title
+            authorLabel.text = "\(NewsConstants.authorTitle): \(newsObject.author)"
+            descriptionLabel.text = newsObject.description
+            timeLabel.text = newsObject.publishedAt.getDateFromString().getElapsedInterval()
+            newsImageView?.sd_setImage(with: URL(string:newsObject.urlToImage), placeholderImage:#imageLiteral(resourceName: "placeholder"))
+           
+            let attributedString = NSMutableAttributedString(string: NewsConstants.readMore)
+            attributedString.addAttribute(.link, value: newsObject.url, range: NSRange(location: 0, length: 9))
+            linkView.attributedText = attributedString
+            
         } 
     }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

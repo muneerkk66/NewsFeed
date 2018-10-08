@@ -16,10 +16,12 @@ class NewsConstants: NSObject {
         
        // case prod = "https://newsapi.org"
     }
-    static let baseURL                      = BaseURL.dev.rawValue
-    static let apiKey = "3363a374df9f4660a260a187915f0937"
-    
-    
+    static let baseURL        = BaseURL.dev.rawValue
+    static let apiKey         = "3363a374df9f4660a260a187915f0937"
+    static let defaultSearch  = "apple"
+    static let defaultSortKey = "popularity"
+    static let authorTitle    = "Author"
+    static let readMore       = "Read More"
     enum APIUrl:String {
        case getAllNews = "/v2/everything"
     }
@@ -36,7 +38,7 @@ class NewsConstants: NSObject {
     }
     // MARK: Nib Name -
     enum NibNames:String {
-        case NewsNib                        = "NewsTableViewCell"
+        case NewsNib                         = "NewsTableViewCell"
     }
     
     enum DataResponseError: Error {

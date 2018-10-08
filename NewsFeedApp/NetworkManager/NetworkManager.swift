@@ -13,6 +13,8 @@ class NetworkManager: NSObject {
     init(session: URLSession = URLSession.shared) {
         self.session = session
     }
+    
+    /* Get Request */
     func getRequestPath(request:URLRequest, parameters:[String:AnyObject]?, completionBlock:@escaping ApiCompletionBlock) {
         
         session.dataTask(with: request, completionHandler: { data, response, error in

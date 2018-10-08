@@ -4,7 +4,11 @@
 //
 //  Created by Muneer KK on 05/10/18.
 //  Copyright © 2018 Muneer KK. All rights reserved.
-//
+
+
+// Features included
+// 1. Sorting news by local date publishedAt
+// 2. Search news by server query
 
 import UIKit
 import SDWebImage
@@ -16,8 +20,8 @@ private typealias TableViewPrefetchDelegate   = NewsViewController
 class NewsViewController: UIViewController,AlertView {
     @IBOutlet var newsTableView: UITableView!
     @IBOutlet var searchController: UISearchBar!
-    fileprivate var searchText = "apple"
-    fileprivate var sortKey = "popularity"
+    fileprivate var searchText = NewsConstants.defaultSearch
+    fileprivate var sortKey = NewsConstants.defaultSortKey
     fileprivate var pageSize:Int = 10
     fileprivate var pageNumber = 1
     fileprivate var isFetchInProgress = false
@@ -35,7 +39,7 @@ class NewsViewController: UIViewController,AlertView {
     
     //MARK: - Helper
     fileprivate func initialiseTableView() {
-        
+        //newsTableView.isHidden = true
         newsTableView.separatorInset = UIEdgeInsets(top: 0, left: self.view.bounds.size.width, bottom: 0, right: 0)
         newsTableView.register(UINib(nibName: NewsConstants.NibNames.NewsNib.rawValue, bundle: Bundle.main), forCellReuseIdentifier: NewsConstants.TableViewCellIdentifier.NewsCell.rawValue)
         
@@ -50,6 +54,7 @@ class NewsViewController: UIViewController,AlertView {
         }
         isFetchInProgress = true
         DispatchQueue.main.async { [weak self]() -> Void in
+            // Show loading Indicator
             MBProgressHUD.showAdded(to: (self?.view)!, animated: true)
         }
         newsVM.loadAllNewsFeed(search: searchText, pageNumber: pageNumber, size: pageSize, sortKey: sortKey) {[weak self] (response, error) in
@@ -58,14 +63,13 @@ class NewsViewController: UIViewController,AlertView {
                 return
             }
             DispatchQueue.main.async { [weak self]() -> Void in
-                MBProgressHUD.hideAllHUDs(for: (self?.view)!, animated: true)
+                
+                // Hide loading Indicator
+                MBProgressHUD.hide(for: (self?.view)!, animated: true)
                 self?.isFetchInProgress = false
                 if let _ = error {
-                 
                     self?.onFetchFailed(with: (error?.reason)!)
-                    
-                }
-                else {
+                } else {
                     self?.pageNumber += 1
                     self?.isFetchInProgress = false
 
@@ -94,28 +98,27 @@ class NewsViewController: UIViewController,AlertView {
         }
     }
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
-        // 1
-        guard let newIndexPathsToReload = newIndexPathsToReload else {
-            newsTableView.isHidden = false
+    
+        if let _ = newIndexPathsToReload {
             newsTableView.reloadData()
-            return
+        } else {
+            let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload!)
+            newsTableView.reloadRows(at: indexPathsToReload, with: .automatic)
         }
-        // 2
-        let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
-        newsTableView.reloadRows(at: indexPathsToReload, with: .automatic)
+    
     }
     
     func onFetchFailed(with reason: String) {
-
         
+        // Show Error Alert
         let title = "Warning"
         let action = UIAlertAction(title: "OK", style: .default)
         displayAlert(with: title , message: reason, actions: [action])
     }
     @IBAction func sortButtonPressed(_ sender: UIButton) {
-        // UI updates
+        // UI updates for sort button
         updateButtonImage(sender: sender)
-        
+    
         if (currentSortOrder == .orderedAscending){
             currentSortOrder = .orderedDescending
             
@@ -149,7 +152,8 @@ extension TableViewMethods: UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 50
+        return newsVM.totalNewsCount
+        
     }
     
     
@@ -180,7 +184,7 @@ extension TableViewPrefetchDelegate: UITableViewDataSourcePrefetching {
     }
 }
 //MARK: -
-/* Methods to handle search */
+/* Methods to handle search. This is the server search with entered key on the search bar*/
 extension SearchBarDelegates:UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
@@ -194,15 +198,15 @@ extension SearchBarDelegates:UISearchBarDelegate {
         return true
     }
     
-    
     func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
         return true
     }
     
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // Update News by search value
+        // Get news by search field with query q="searchvalue"
         loadAllNews()
+        
         pageNumber = 1
         isNewSearch = true
   
